@@ -2,7 +2,7 @@ import app from "./app.js"
 import { databaseConnection as database } from "../backend/src/database/connection.js"
 
 const startServer = async () => {
-    try {
+    try { 
         await database.sync({
             // force: true
         })
