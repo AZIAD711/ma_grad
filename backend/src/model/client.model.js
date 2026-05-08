@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize"
 import {databaseConnection as database} from "../database/connection.js"
-export const User = database.define("user",{
+export const Client = database.define("client",{
     // CLIENT ID 
     clientId : {
         type : DataTypes.INTEGER,
