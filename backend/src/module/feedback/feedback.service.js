@@ -11,3 +11,11 @@ export const getAllFeedbacksService = async()=>{
 export const getFeedbackByIdService = async(id)=>{
     return await Feedback.findByPk(id)
 }
+// UPDATE FEEDBACK DATA 
+export const updateFeedbackService = async(data,id)=>{
+    return await Feedback.update(data,{
+        where:{
+            feedbackId:id
+        }
+    })
+}

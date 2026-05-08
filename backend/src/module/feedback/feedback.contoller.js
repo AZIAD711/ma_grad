@@ -1,4 +1,4 @@
-import {addFeedbackService,getAllFeedbacksService,getFeedbackByIdService} from "./feedback.service.js"
+import {addFeedbackService,getAllFeedbacksService,getFeedbackByIdService,updateFeedbackService} from "./feedback.service.js"
 // ADD NEW FEEDBACK 
 export const addFeedbackController = async(request,response)=>{
     try {
@@ -41,6 +41,23 @@ export const getFeedbackByIdContoller = async(request,response)=>{
         })
     } catch (error) {
                 console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// UPDATE FEEDBACK DATA 
+export const updateFeedbackContoller = async(request,response)=>{
+    try {
+        const feedbackId = request.params.id
+        const feedbackBody = request.body
+        const feedbacks = await updateFeedbackService(feedbackBody,feedbackId)
+        return response.status(200).json({
+            "message":"feedbacks updated successfully",
+            "data":feedbacks
+        })
+    } catch (error) {
+                        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
         return response.status(500).json({
             "errorMessage":"something went wrong"
         })
