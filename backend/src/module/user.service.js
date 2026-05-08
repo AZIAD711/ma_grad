@@ -19,3 +19,11 @@ export const updateUserService = async(data,id)=>{
         }
     })
 }
+// DELETE USER DATA 
+export const deleteUserService = async(id)=>{
+    return await User.destroy({
+        where:{
+            userId:id
+        }
+    })
+}

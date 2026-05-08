@@ -1,4 +1,4 @@
-import {addUserController,getAllUsersContoller,getUserByIdContoller,updateUserContoller} from "./user.controller.js"
+import {addUserController,getAllUsersContoller,getUserByIdContoller,updateUserContoller,deleteUserContoller} from "./user.controller.js"
 import express from "express"
 const API = express.Router()
 API.use(express.json())
@@ -10,4 +10,6 @@ API.get("/",getAllUsersContoller)
 API.get("/:id",getUserByIdContoller)
 // http://localhost:3000/user/update/:id
 API.put("/update/:id",updateUserContoller)
+// http://localhost:3000/user/delete/:id
+API.delete("/delete/:id",deleteUserContoller)
 export default API
