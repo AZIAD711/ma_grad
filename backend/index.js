@@ -4,7 +4,7 @@ import { databaseConnection as database } from "../backend/src/database/connecti
 const startServer = async () => {
     try {
         await database.sync({
-            force: true
+            // force: true
         })
         const port = 3000
         app.listen(port, () => {
