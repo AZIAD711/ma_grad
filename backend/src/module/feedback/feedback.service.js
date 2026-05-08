@@ -19,3 +19,11 @@ export const updateFeedbackService = async(data,id)=>{
         }
     })
 }
+// DELETE FEEDBACK DATA 
+export const deleteFeedbackService = async(id)=>{
+    return await Feedback.destroy({
+        where:{
+            feedbackId:id
+        }
+    })
+}
