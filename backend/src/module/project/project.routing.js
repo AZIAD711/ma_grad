@@ -1,4 +1,4 @@
-import {addProjectController,getAllProjectsContoller,getProjectByIdContoller} from "./project.controller.js"
+import {addProjectController,getAllProjectsContoller,getProjectByIdContoller,updateProjectContoller} from "./project.controller.js"
 import express from "express"
 const API = express.Router()
 API.use(express.json())
@@ -8,4 +8,6 @@ API.post("/add",addProjectController)
 API.get("/",getAllProjectsContoller)
 // http://localhost:3000/project/:id
 API.get("/:id",getProjectByIdContoller)
+// http://localhost:3000/project/update/:id
+API.put("/update/:id",updateProjectContoller)
 export default API

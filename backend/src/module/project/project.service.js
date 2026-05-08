@@ -11,3 +11,11 @@ export const getAllProjectssService = async()=>{
 export const getProjectByIdService = async(id)=>{
     return await Project.findByPk(id)
 }
+// UPDATE PROJECT DATA 
+export const updateProjectService = async(data,id)=>{
+    return await Project.update(data,{
+        where:{
+            projectId:id
+        }
+    })
+}
