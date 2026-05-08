@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize"
 import {databaseConnection as database} from "../database/connection.js"
 export const Appoinment = database.define("appointment",{
     // APPOINMENT ID 
-    appoinment : {
+    appoinmentId : {
         type : DataTypes.INTEGER,
         primaryKey : true,
         autoIncrement : true,
