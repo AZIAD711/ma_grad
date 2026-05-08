@@ -19,3 +19,11 @@ export const updateProjectService = async(data,id)=>{
         }
     })
 }
+// DELETE PROJECT DATA 
+export const deleteProjectService = async(id)=>{
+    return await Project.destroy({
+        where:{
+            projectId:id
+        }
+    })
+}

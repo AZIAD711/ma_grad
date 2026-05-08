@@ -1,4 +1,4 @@
-import { addProjectService, getAllProjectssService, getProjectByIdService ,updateProjectService} from "./project.service.js"
+import { addProjectService, getAllProjectssService, getProjectByIdService ,updateProjectService,deleteProjectService} from "./project.service.js"
 // ADD NEW USER 
 export const addProjectController = async (request, response) => {
     try {
@@ -60,6 +60,22 @@ export const updateProjectContoller = async (request, response) => {
         console.log(`❌ ERROR IN CONTROLLER : ${error}`)
         return response.status(500).json({
             "errorMessage": "something went wrong"
+        })
+    }
+}
+// DELETE PROJECT DATA 
+export const deleteProjectContoller = async(request,response)=>{
+    try {
+        const projectId = request.params.id
+        const projects = await deleteProjectService(projectId)
+        return response.status(200).json({
+            "message":"project deleted successfully",
+            "data":projects
+        })
+    } catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
         })
     }
 }
