@@ -7,3 +7,7 @@ export const addProjectService = async(data)=>{
 export const getAllProjectssService = async()=>{
     return await Project.findAll()
 }
+// GET PROJECT BY ID 
+export const getProjectByIdService = async(id)=>{
+    return await Project.findByPk(id)
+}

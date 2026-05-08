@@ -1,4 +1,4 @@
-import {addProjectService,getAllProjectssService} from "./project.service.js"
+import {addProjectService,getAllProjectssService,getProjectByIdService} from "./project.service.js"
 // ADD NEW USER 
 export const addProjectController = async(request,response)=>{
     try {
@@ -30,3 +30,18 @@ export const getAllProjectsContoller = async(request,response)=>{
         })
     }
 }
+// GET PROJECT BY ID 
+export const getProjectByIdContoller = async(request,response)=>{
+    try {
+        const projectId = request.params.id
+        const projects = await getProjectByIdService(projectId)
+        return response.status(200).json({
+            "message":"project fetched successfully",
+            "data":projects
+        })
+    } catch (error) {
+                console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }}
