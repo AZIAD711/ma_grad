@@ -1,4 +1,4 @@
-import {addFeedbackController,getAllFeedbacksContoller} from "./feedback.contoller.js"
+import {addFeedbackController,getAllFeedbacksContoller,getFeedbackByIdContoller} from "./feedback.contoller.js"
 import express from "express"
 const API = express.Router()
 API.use(express.json())
@@ -6,4 +6,6 @@ API.use(express.json())
 API.post("/add",addFeedbackController)
 // http://localhost:3000/feedback/
 API.get("/",getAllFeedbacksContoller)
+// http://localhost:3000/feedback/:id
+API.get("/:id",getFeedbackByIdContoller)
 export default API

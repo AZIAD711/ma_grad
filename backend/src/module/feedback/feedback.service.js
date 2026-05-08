@@ -7,3 +7,7 @@ export const addFeedbackService = async(data)=>{
 export const getAllFeedbacksService = async()=>{
     return await Feedback.findAll()
 }
+// GET FEEDBACK BY ID 
+export const getFeedbackByIdService = async(id)=>{
+    return await Feedback.findByPk(id)
+}
