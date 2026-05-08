@@ -7,3 +7,7 @@ export const addUserService = async(data)=>{
 export const getAllUsersService = async()=>{
     return await User.findAll()
 }
+// GET USER BY ID 
+export const getUserByIdService = async(id)=>{
+    return await User.findByPk(id)
+}

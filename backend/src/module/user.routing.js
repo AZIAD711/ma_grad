@@ -1,4 +1,4 @@
-import {addUserController,getAllUsersContoller} from "./user.controller.js"
+import {addUserController,getAllUsersContoller,getUserByIdContoller} from "./user.controller.js"
 import express from "express"
 const API = express.Router()
 API.use(express.json())
@@ -6,4 +6,6 @@ API.use(express.json())
 API.post("/add",addUserController)
 // http://localhost:3000/user
 API.get("/",getAllUsersContoller)
+// http://localhost:3000/user/:id
+API.get("/:id",getUserByIdContoller)
 export default API

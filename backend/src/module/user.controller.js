@@ -1,4 +1,4 @@
-import {addUserService,getAllUsersService} from "./user.service.js"
+import {addUserService,getAllUsersService,getUserByIdService} from "./user.service.js"
 // ADD NEW USER 
 export const addUserController = async(request,response)=>{
     try {
@@ -21,6 +21,22 @@ export const getAllUsersContoller = async(request,response)=>{
         const users = await getAllUsersService()
         return response.status(200).json({
             "message":"users fetched successfully",
+            "data":users
+        })
+    } catch (error) {
+                console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// GET USER BY ID 
+export const getUserByIdContoller = async(request,response)=>{
+    try {
+        const userId = request.params.id
+        const users = await getUserByIdService(userId)
+        return response.status(200).json({
+            "message":"user fetched successfully",
             "data":users
         })
     } catch (error) {
