@@ -11,3 +11,11 @@ export const getAllUsersService = async()=>{
 export const getUserByIdService = async(id)=>{
     return await User.findByPk(id)
 }
+// UPDATE USER DATA 
+export const updateUserService = async(data,id)=>{
+    return await User.update(data,{
+        where:{
+            userId:id
+        }
+    })
+}
