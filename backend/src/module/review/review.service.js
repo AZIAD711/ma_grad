@@ -7,3 +7,7 @@ export const addReviewService = async(data)=>{
 export const getAllReviewsService = async()=>{
     return await Review.findAll()
 }
+// GET REVIEW BY ID 
+export const getReviewByIdService = async(id)=>{
+    return await Review.findByPk(id)
+}
