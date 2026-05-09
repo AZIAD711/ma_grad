@@ -1,4 +1,4 @@
-import {addAdminService,getAllAdminsService,getAdminByIdService,updateAdminService} from "./admin.service.js"
+import {addAdminService,getAllAdminsService,getAdminByIdService,updateAdminService,deleteAdminService} from "./admin.service.js"
 // ADD NEW ADMIN 
 export const addAdminController = async(request,response)=>{
     try {
@@ -54,6 +54,22 @@ export const updateAdminContoller = async(request,response)=>{
         const admins = await updateAdminService(adminnBody,adminId)
         return response.status(200).json({
             "message":"admin updated successfully",
+            "data":admins
+        })
+    } catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// DELETE ADMIN DATA 
+export const deleteAdminContoller = async(request,response)=>{
+    try {
+        const adminId = request.params.id
+        const admins = await deleteAdminService(adminId)
+        return response.status(200).json({
+            "message":"admin deleted successfully",
             "data":admins
         })
     } catch (error) {

@@ -1,4 +1,4 @@
-import {addAdminController,getAllAdminsContoller,getAdminByIdContoller,updateAdminContoller} from "./admin.controller.js"
+import {addAdminController,getAllAdminsContoller,getAdminByIdContoller,updateAdminContoller,deleteAdminContoller} from "./admin.controller.js"
 import express from "express"
 const API = express.Router()
 API.use(express.json())
@@ -10,4 +10,6 @@ API.get("/",getAllAdminsContoller)
 API.get("/:id",getAdminByIdContoller)
 // http://localhost:3000/admin/update/:id
 API.put("/update/:id",updateAdminContoller)
+// http://localhost:3000/admin/delete/:id
+API.delete("/delete/:id",deleteAdminContoller)
 export default API

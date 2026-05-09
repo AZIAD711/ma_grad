@@ -19,3 +19,11 @@ export const updateAdminService = async(data,id)=>{
         }
     })
 }
+// DELETE ADMIN DATA 
+export const deleteAdminService = async(id)=>{
+    return await Admin.destroy({
+        where:{
+            adminId:id
+        }
+    })
+}
