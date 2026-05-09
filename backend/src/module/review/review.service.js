@@ -19,3 +19,11 @@ export const updateReviewService = async(data,id)=>{
         }
     })
 }
+// DELETE REVIEW DATA 
+export const deleteReviewService = async(id)=>{
+    return await Review.destroy({
+        where:{
+            reviewId:id
+        }
+    })
+}

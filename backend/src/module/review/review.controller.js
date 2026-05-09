@@ -1,4 +1,4 @@
-import {addReviewService,getAllReviewsService,getReviewByIdService,updateReviewService} from "./review.service.js"
+import {addReviewService,getAllReviewsService,getReviewByIdService,updateReviewService,deleteReviewService} from "./review.service.js"
 // ADD NEW REVIEW 
 export const addReviewController = async(request,response)=>{
     try {
@@ -58,6 +58,22 @@ export const updateReviewContoller = async(request,response)=>{
         })
     } catch (error) {
                         console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// DELETE REVIEW DATA 
+export const deleteReviewContoller = async(request,response)=>{
+    try {
+        const reviewId = request.params.id
+        const reviews = await deleteReviewService(reviewId)
+        return response.status(200).json({
+            "message":"review deleted successfully",
+            "data":reviews
+        })
+    } catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
         return response.status(500).json({
             "errorMessage":"something went wrong"
         })
