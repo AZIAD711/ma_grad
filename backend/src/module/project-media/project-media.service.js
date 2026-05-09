@@ -7,3 +7,7 @@ export const addProjectMediaService = async(data)=>{
 export const getAllProjectMediasService = async()=>{
     return await ProjectMedia.findAll()
 }
+// GET PROJECT MEDIA BY ID 
+export const getProjectMediaByIdService = async(id)=>{
+    return await ProjectMedia.findByPk(id)
+}
