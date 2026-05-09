@@ -3,3 +3,7 @@ import { Review } from "../../model/review.model.js"
 export const addReviewService = async(data)=>{
     return await Review.create(data)
 }
+// GET ALL REVIEWS 
+export const getAllReviewsService = async()=>{
+    return await Review.findAll()
+}

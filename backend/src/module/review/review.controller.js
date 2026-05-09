@@ -1,4 +1,4 @@
-import {addReviewService} from "./review.service.js"
+import {addReviewService,getAllReviewsService} from "./review.service.js"
 // ADD NEW USER 
 export const addReviewController = async(request,response)=>{
     try {
@@ -10,6 +10,21 @@ export const addReviewController = async(request,response)=>{
         })
     } catch (error) {
         console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// GET ALL REVIEWS 
+export const getAllReviewsContoller = async(request,response)=>{
+    try {
+        const reviews = await getAllReviewsService()
+        return response.status(200).json({
+            "message":"reviews fetched successfully",
+            "data":reviews
+        })
+    } catch (error) {
+                console.log(`❌ ERROR IN CONTROLLER : ${error}`)
         return response.status(500).json({
             "errorMessage":"something went wrong"
         })
