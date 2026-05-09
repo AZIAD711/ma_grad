@@ -7,3 +7,7 @@ export const addAdminFeaturesService = async(data)=>{
 export const getAllAdminFeatureService = async()=>{
     return await AdminFeatures.findAll()
 }
+// GET ADMIN FEATURES  BY ID 
+export const getAdminFeatureByIdService = async(id)=>{
+    return await AdminFeatures.findByPk(id)
+}
