@@ -1,4 +1,4 @@
-import {addAdminService} from "./admin.service.js"
+import {addAdminService,getAllAdminsService} from "./admin.service.js"
 // ADD NEW ADMIN 
 export const addAdminController = async(request,response)=>{
     try {
@@ -10,6 +10,21 @@ export const addAdminController = async(request,response)=>{
         })
     } catch (error) {
         console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// GET ALL ADMINS 
+export const getAllAdminsContoller = async(request,response)=>{
+    try {
+        const admins = await getAllAdminsService()
+        return response.status(200).json({
+            "message":"admins fetched successfully",
+            "data":admins
+        })
+    } catch (error) {
+                console.log(`❌ ERROR IN CONTROLLER : ${error}`)
         return response.status(500).json({
             "errorMessage":"something went wrong"
         })
