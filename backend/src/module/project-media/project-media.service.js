@@ -19,3 +19,11 @@ export const updateProjectMediaService = async(data,id)=>{
         }
     })
 }
+// DELETE PROJECT MEDIA DATA 
+export const deleteProjectMediaService = async(id)=>{
+    return await ProjectMedia.destroy({
+        where:{
+            projectMediaId:id
+        }
+    })
+}

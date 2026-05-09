@@ -10,4 +10,6 @@ API.get("/",getAllProjectMediaContoller)
 API.get("/:id",getProjectMediaByIdContoller)
 // http://localhost:3000/project/media/update/:id
 API.put("/update/:id",updateProjectMediaContoller)
+// http://localhost:3000/project/media/delete/:id
+API.delete("/delete/:id",updateProjectMediaContoller)
 export default API
