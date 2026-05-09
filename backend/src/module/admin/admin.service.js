@@ -7,3 +7,7 @@ export const addAdminService = async(data)=>{
 export const getAllAdminsService = async()=>{
     return await Admin.findAll()
 }
+// GET ADMIN BY ID 
+export const getAdminByIdService = async(id)=>{
+    return await Admin.findByPk(id)
+}
