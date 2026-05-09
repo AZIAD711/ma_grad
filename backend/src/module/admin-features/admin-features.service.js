@@ -11,3 +11,11 @@ export const getAllAdminFeatureService = async()=>{
 export const getAdminFeatureByIdService = async(id)=>{
     return await AdminFeatures.findByPk(id)
 }
+// UPDATE ADMIN FEATURES DATA 
+export const updateAdminFeaturesService = async(data,id)=>{
+    return await AdminFeatures.update(data,{
+        where:{
+            adminId:id
+        }
+    })
+}
