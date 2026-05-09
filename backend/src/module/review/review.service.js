@@ -11,3 +11,11 @@ export const getAllReviewsService = async()=>{
 export const getReviewByIdService = async(id)=>{
     return await Review.findByPk(id)
 }
+// UPDATE REVIEW DATA 
+export const updateReviewService = async(data,id)=>{
+    return await Review.update(data,{
+        where:{
+            reviewId:id
+        }
+    })
+}

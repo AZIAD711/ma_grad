@@ -1,4 +1,4 @@
-import {addReviewController,getAllReviewsContoller,getReviewByIdContoller} from "./review.controller.js"
+import {addReviewController,getAllReviewsContoller,getReviewByIdContoller,updateReviewContoller} from "./review.controller.js"
 import express from "express"
 const API = express.Router()
 API.use(express.json())
@@ -8,4 +8,6 @@ API.post("/add",addReviewController)
 API.get("/",getAllReviewsContoller)
 // http://localhost:3000/review/:id
 API.get("/:id",getReviewByIdContoller)
+// http://localhost:3000/review/update/:id
+API.put("/update/:id",updateReviewContoller)
 export default API
