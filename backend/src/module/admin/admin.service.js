@@ -11,3 +11,11 @@ export const getAllAdminsService = async()=>{
 export const getAdminByIdService = async(id)=>{
     return await Admin.findByPk(id)
 }
+// UPDATE ADMIN DATA 
+export const updateAdminService = async(data,id)=>{
+    return await Admin.update(data,{
+        where:{
+            adminId:id
+        }
+    })
+}
