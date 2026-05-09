@@ -1,4 +1,4 @@
-import {addAdminFeaturesController,getAllAdminFeaturesContoller,getAdminFeaturesByIdContoller,updateAdminFeaturesContoller} from "./admin-features.controller.js"
+import {addAdminFeaturesController,getAllAdminFeaturesContoller,getAdminFeaturesByIdContoller,updateAdminFeaturesContoller,deleteAdminFeaturesContoller} from "./admin-features.controller.js"
 import express from "express"
 const API = express.Router()
 API.use(express.json())
@@ -10,4 +10,6 @@ API.get("/",getAllAdminFeaturesContoller)
 API.get("/:id",getAdminFeaturesByIdContoller)
 // http://localhost:3000/admin/feature/update/:id
 API.put("/update/:id",updateAdminFeaturesContoller)
+// http://localhost:3000/admin/feature/delete/:id
+API.delete("/delete/:id",deleteAdminFeaturesContoller)
 export default API

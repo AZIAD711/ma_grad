@@ -1,4 +1,4 @@
-import {addAdminFeaturesService,getAllAdminFeatureService,getAdminFeatureByIdService,updateAdminFeaturesService} from "./admin-features.service.js"
+import {addAdminFeaturesService,getAllAdminFeatureService,getAdminFeatureByIdService,updateAdminFeaturesService,deleteAdminFeaturesService} from "./admin-features.service.js"
 // ADD NEW ADMIN FEATURES 
 export const addAdminFeaturesController = async(request,response)=>{
     try {
@@ -54,6 +54,22 @@ export const updateAdminFeaturesContoller = async(request,response)=>{
         const adminFeatures = await updateAdminFeaturesService(adminFeaturesBody,adminFeaturesId)
         return response.status(200).json({
             "message":"admin features updated successfully",
+            "data":adminFeatures
+        })
+    } catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// DELETE ADMIN FEATURES DATA 
+export const deleteAdminFeaturesContoller = async(request,response)=>{
+    try {
+        const adminFeaturesId = request.params.id
+        const adminFeatures = await deleteAdminFeaturesService(adminFeaturesId)
+        return response.status(200).json({
+            "message":"admin features deleted successfully",
             "data":adminFeatures
         })
     } catch (error) {

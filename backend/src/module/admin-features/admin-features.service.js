@@ -19,3 +19,11 @@ export const updateAdminFeaturesService = async(data,id)=>{
         }
     })
 }
+// DELETE ADMIN FEATURES DATA 
+export const deleteAdminFeaturesService = async(id)=>{
+    return await AdminFeatures.destroy({
+        where:{
+            adminId:id
+        }
+    })
+}
