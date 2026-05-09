@@ -5,12 +5,15 @@ import feedbackRouter from "./src/module/feedback/feedback.routing.js"
 import adminRouter from './src/module/admin/admin.routing.js'
 import adminFeaturesRouting from "./src/module/admin-features/admin-features.routing.js"
 import reviewRouting from "./src/module/review/review.routing.js"
+import projectMediaRouting from "./src/module/project-media/project-media.routing.js"
  const app = express()
 app.use(express.json())
 // USER MODULE
 app.use("/user",userRouter)
 // PROJECT MODULE 
 app.use("/project",projectRouter)
+// PROJECT MEDIA MODULE 
+app.use("/project/media",projectMediaRouting)
 // FEEDBACK MODULE 
 app.use("/feedback",feedbackRouter)
 // ADMIN MODULE 
