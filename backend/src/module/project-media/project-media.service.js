@@ -11,3 +11,11 @@ export const getAllProjectMediasService = async()=>{
 export const getProjectMediaByIdService = async(id)=>{
     return await ProjectMedia.findByPk(id)
 }
+// UPDATE USER DATA 
+export const updateProjectMediaService = async(data,id)=>{
+    return await ProjectMedia.update(data,{
+        where:{
+            projectMediaId:id
+        }
+    })
+}

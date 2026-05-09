@@ -1,4 +1,4 @@
-import {addProjectMediaService,getAllProjectMediasService,getProjectMediaByIdService} from "./project-media.service.js"
+import {addProjectMediaService,getAllProjectMediasService,getProjectMediaByIdService,updateProjectMediaService} from "./project-media.service.js"
 // ADD NEW PROJECT MEDIA  
 export const addProjectMediaController = async(request,response)=>{
     try {
@@ -41,6 +41,23 @@ export const getProjectMediaByIdContoller = async(request,response)=>{
         })
     } catch (error) {
                 console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// UPDATE PROJECT MEDIA DATA 
+export const updateProjectMediaContoller = async(request,response)=>{
+    try {
+        const projectMediaId = request.params.id
+        const projectMediaBody = request.body
+        const projectMedia = await updateProjectMediaService(projectMediaBody,projectMediaId)
+        return response.status(200).json({
+            "message":"project media updated successfully",
+            "data":projectMedia
+        })
+    } catch (error) {
+                        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
         return response.status(500).json({
             "errorMessage":"something went wrong"
         })
