@@ -1,4 +1,4 @@
-import {addOrderService,getAllOrdersService,getOrderByIdService} from "./order.service.js"
+import {addOrderService,getAllOrdersService,getOrderByIdService,updateOrderService} from "./order.service.js"
 // ADD NEW ORDER 
 export const addOrderController = async(request,response)=>{
     try {
@@ -41,6 +41,23 @@ export const getOrderByIdContoller = async(request,response)=>{
         })
     } catch (error) {
         console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// UPDATE ORDER DATA 
+export const updateOrderContoller = async(request,response)=>{
+    try {
+        const orderId = request.params.id
+        const orderBody = request.body
+        const orders = await updateOrderService(orderBody,orderId)
+        return response.status(200).json({
+            "message":"order updated successfully",
+            "data":orders
+        })
+    } catch (error) {
+                        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
         return response.status(500).json({
             "errorMessage":"something went wrong"
         })

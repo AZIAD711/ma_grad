@@ -11,3 +11,11 @@ export const getAllOrdersService = async()=>{
 export const getOrderByIdService = async(id)=>{
     return await Order.findByPk(id)
 }
+// UPDATE ORDER DATA 
+export const updateOrderService = async(data,id)=>{
+    return await Order.update(data,{
+        where:{
+            orderId:id
+        }
+    })
+}
