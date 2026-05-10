@@ -12,3 +12,11 @@ export const getAllAppoinmentService = async()=>{
 export const getAppoinmentByIdService = async(id)=>{
     return await Appoinment.findByPk(id)
 }
+// UPDATE APPOINMENT DATA 
+export const updateAppoinmentService = async(data,id)=>{
+    return await Appoinment.update(data,{
+        where:{
+            appoinmentId:id
+        }
+    })
+}
