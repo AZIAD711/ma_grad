@@ -1,4 +1,4 @@
-import {addClientService} from "./client.service.js"
+import {addClientService,getAllClientsService} from "./client.service.js"
 // ADD NEW CLIENT 
 export const addClientController = async(request,response)=>{
     try {
@@ -7,6 +7,21 @@ export const addClientController = async(request,response)=>{
         return response.status(201).json({
             "message":"client added successfully",
             "data":newClient
+        })
+    } catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// GET ALL CLIENTS 
+export const getAllClientsContoller = async(request,response)=>{
+    try {
+        const clients = await getAllClientsService()
+        return response.status(200).json({
+            "message":"clients fetched successfully",
+            "data":clients
         })
     } catch (error) {
         console.log(`❌ ERROR IN CONTROLLER : ${error}`)

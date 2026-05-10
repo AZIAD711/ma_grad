@@ -4,3 +4,7 @@ import { Client } from "../../model/client.model.js"
 export const addClientService = async(data)=>{
     return await Client.create(data)
 }
+// GET ALL CLIENTS 
+export const getAllClientsService = async()=>{
+    return await Client.findAll()
+}
