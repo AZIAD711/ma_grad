@@ -8,3 +8,7 @@ export const addAppoinmentMediaService = async(data)=>{
 export const getAllAppoinmentMediasService = async()=>{
     return await AppoinmentMedia.findAll()
 }
+// GET APPOINMENT MEDIA  BY ID 
+export const getAppoinmentMediaByIdService = async(id)=>{
+    return await AppoinmentMedia.findByPk(id)
+}
