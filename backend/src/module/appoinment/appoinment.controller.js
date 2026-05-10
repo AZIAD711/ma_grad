@@ -1,4 +1,4 @@
-import {addAppoinmentService,getAllAppoinmentService} from "./appoinment.service.js"
+import {addAppoinmentService,getAllAppoinmentService,getAppoinmentByIdService} from "./appoinment.service.js"
 // ADD NEW APPOINMENT 
 export const addAppoinmentController = async(request,response)=>{
     try {
@@ -25,6 +25,22 @@ export const getAllAppoinmentContoller = async(request,response)=>{
         })
     } catch (error) {
                 console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// GET APPOINMENT BY ID 
+export const getAppoinmentByIdContoller = async(request,response)=>{
+    try {
+        const appoinmentId = request.params.id
+        const appoinments = await getAppoinmentByIdService(appoinmentId)
+        return response.status(200).json({
+            "message":"appoinment fetched successfully",
+            "data":appoinments
+        })
+    } catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
         return response.status(500).json({
             "errorMessage":"something went wrong"
         })

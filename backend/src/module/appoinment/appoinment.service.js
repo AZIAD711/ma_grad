@@ -8,3 +8,7 @@ export const addAppoinmentService = async(data)=>{
 export const getAllAppoinmentService = async()=>{
     return await Appoinment.findAll()
 }
+// GET APPOINMENT BY ID 
+export const getAppoinmentByIdService = async(id)=>{
+    return await Appoinment.findByPk(id)
+}
