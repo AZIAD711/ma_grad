@@ -7,3 +7,7 @@ export const addOrderService = async(data)=>{
 export const getAllOrdersService = async()=>{
     return await Order.findAll()
 }
+// GET ORDER BY ID 
+export const getOrderByIdService = async(id)=>{
+    return await Order.findByPk(id)
+}
