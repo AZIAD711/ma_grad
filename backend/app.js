@@ -10,6 +10,7 @@ import appoinmentRouting from  "./src/module/appoinment/appoinment.routing.js"
 import appoinmentMediaRouting from "./src/module/appoinment-media/appoinment-media.routing.js"
 import clientRouting from "./src/module/client/client.routing.js"
 import workerRouting from "./src/module/worker/worker.routing.js"
+import workerCountryMarketRouting from "./src/module/worker-country-market/worker-country-market.routing.js"
  const app = express()
 app.use(express.json())
 // USER MODULE
@@ -18,6 +19,10 @@ app.use("/user",userRouter)
 app.use("/client",clientRouting)
 // WORKER MODULE 
 app.use("/worker",workerRouting)
+// WORKER MODULE 
+app.use("/worker",workerRouting)
+// WORKER COUNTRY MARKET MODULE 
+app.use("/worker/country/market",workerCountryMarketRouting)
 // ADMIN MODULE 
 app.use("/admin",adminRouter)
 // ADMIN FEATURES MODULE 
