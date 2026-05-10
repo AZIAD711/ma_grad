@@ -30,7 +30,7 @@ export const getAllOrdersContoller = async(request,response)=>{
         })
     }
 }
-// GET REVIEW BY ID 
+// GET ORDER BY ID 
 export const getOrderByIdContoller = async(request,response)=>{
     try {
         const orderId = request.params.id

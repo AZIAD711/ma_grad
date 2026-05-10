@@ -6,3 +6,7 @@ export const addNotificationService = async(data)=>{
 export const getAllNotificationsService = async()=>{
     return await Notification.findAll()
 }
+// GET NOTIFICATION BY ID 
+export const getNotificationByIdService = async(id)=>{
+    return await Notification.findByPk(id)
+}
