@@ -3,3 +3,7 @@ import { Worker } from "../../model/worker.model.js"
 export const addWorkerService = async(data)=>{
     return await Worker.create(data)
 }
+// GET ALL WORKERS 
+export const getAllWorkersService = async()=>{
+    return await Worker.findAll()
+}
