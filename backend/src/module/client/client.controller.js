@@ -1,4 +1,4 @@
-import {addClientService,getAllClientsService} from "./client.service.js"
+import {addClientService,getAllClientsService,getClientByIdService} from "./client.service.js"
 // ADD NEW CLIENT 
 export const addClientController = async(request,response)=>{
     try {
@@ -25,6 +25,22 @@ export const getAllClientsContoller = async(request,response)=>{
         })
     } catch (error) {
         console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// GET CLEINT BY ID 
+export const getClientByIdContoller = async(request,response)=>{
+    try {
+        const clientId = request.params.id
+        const clients = await getClientByIdService(clientId)
+        return response.status(200).json({
+            "message":"client fetched successfully",
+            "data":clients
+        })
+    } catch (error) {
+                console.log(`❌ ERROR IN CONTROLLER : ${error}`)
         return response.status(500).json({
             "errorMessage":"something went wrong"
         })

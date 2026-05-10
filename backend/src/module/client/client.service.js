@@ -8,3 +8,7 @@ export const addClientService = async(data)=>{
 export const getAllClientsService = async()=>{
     return await Client.findAll()
 }
+// GET CLIENT BY ID 
+export const getClientByIdService = async(id)=>{
+    return await Client.findByPk(id)
+}
