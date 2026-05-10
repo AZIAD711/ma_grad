@@ -11,3 +11,11 @@ export const getAllWorkerCountryMarketService = async()=>{
 export const getWorkerCountryMarketByIdService = async(id)=>{
     return await WorkerCountryMarket.findByPk(id)
 }
+// UPDATE WORKER COUNTRY MARKET DATA 
+export const updateWorkerCountryMarketService = async(data,id)=>{
+    return await WorkerCountryMarket.update(data,{
+        where:{
+            workerId:id
+        }
+    })
+}
