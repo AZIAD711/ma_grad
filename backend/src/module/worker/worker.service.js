@@ -19,3 +19,11 @@ export const updateWorkerService = async(data,id)=>{
         }
     })
 }
+// DELETE WORKER DATA 
+export const deleteWorkerService = async(id)=>{
+    return await Worker.destroy({
+        where:{
+            workerId:id
+        }
+    })
+}

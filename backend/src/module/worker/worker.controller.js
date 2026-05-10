@@ -1,4 +1,4 @@
-import {addWorkerService,getAllWorkersService,getWorkerByIdService,updateWorkerService} from "./worker.service.js"
+import {addWorkerService,getAllWorkersService,getWorkerByIdService,updateWorkerService,deleteWorkerService} from "./worker.service.js"
 // ADD NEW USER 
 export const addWorkerController = async(request,response)=>{
     try {
@@ -54,6 +54,22 @@ export const updateWorkerContoller = async(request,response)=>{
         const workers = await updateWorkerService(workerBody,workerId)
         return response.status(200).json({
             "message":"worker updated successfully",
+            "data":workers
+        })
+    } catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// DELETE WORKER DATA 
+export const deleteWorkerContoller = async(request,response)=>{
+    try {
+        const workerId = request.params.id
+        const workers = await deleteWorkerService(workerId)
+        return response.status(200).json({
+            "message":"worker deleted successfully",
             "data":workers
         })
     } catch (error) {

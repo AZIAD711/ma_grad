@@ -1,4 +1,4 @@
-import {addWorkerController,getAllWorkersContoller,getWorkerByIdContoller,updateWorkerContoller} from "./worker.controller.js"
+import {addWorkerController,getAllWorkersContoller,getWorkerByIdContoller,updateWorkerContoller,deleteWorkerContoller} from "./worker.controller.js"
 import express from "express"
 const API = express.Router()
 API.use(express.json())
@@ -10,4 +10,6 @@ API.get("/",getAllWorkersContoller)
 API.get("/:id",getWorkerByIdContoller)
 // http://localhost:3000/worker/update/:id
 API.put("/update/:id",updateWorkerContoller)
+// http://localhost:3000/worker/delete/:id
+API.delete("/delete/:id",deleteWorkerContoller)
 export default API
