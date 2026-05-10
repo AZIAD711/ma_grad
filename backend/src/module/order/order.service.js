@@ -3,3 +3,7 @@ import { Order } from "../../model/order.model.js"
 export const addOrderService = async(data)=>{
     return await Order.create(data)
 }
+// GET ALL ORDERS 
+export const getAllOrdersService = async()=>{
+    return await Order.findAll()
+}
