@@ -3,3 +3,7 @@ import { WorkerCountryMarket } from "../../model/worker-country-market.model.js"
 export const addWorkerCountryMarketService = async(data)=>{
     return await WorkerCountryMarket.create(data)
 }
+// GET ALL WORKERS COUNTRY MARKET 
+export const getAllWorkerCountryMarketService = async()=>{
+    return await WorkerCountryMarket.findAll()
+}
