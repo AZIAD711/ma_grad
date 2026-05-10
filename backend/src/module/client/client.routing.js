@@ -1,4 +1,4 @@
-import {addClientController,getAllClientsContoller,getClientByIdContoller} from "./client.controller.js"
+import {addClientController,getAllClientsContoller,getClientByIdContoller,updateClientContoller} from "./client.controller.js"
 import express from "express"
 const API = express.Router()
 API.use(express.json())
@@ -8,4 +8,6 @@ API.post("/add",addClientController)
 API.get("/",getAllClientsContoller)
 // http://localhost:3000/client/:id
 API.get("/:id",getClientByIdContoller)
+// http://localhost:3000/client/update/:id
+API.put("/update/:id",updateClientContoller)
 export default API

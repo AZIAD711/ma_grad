@@ -12,3 +12,11 @@ export const getAllClientsService = async()=>{
 export const getClientByIdService = async(id)=>{
     return await Client.findByPk(id)
 }
+// UPDATE CLIENT DATA 
+export const updateClientService = async(data,id)=>{
+    return await Client.update(data,{
+        where:{
+            clientId:id
+        }
+    })
+}
