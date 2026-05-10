@@ -20,3 +20,11 @@ export const updateClientService = async(data,id)=>{
         }
     })
 }
+// DELETE CLIENT DATA 
+export const deleteClientService = async(id)=>{
+    return await Client.destroy({
+        where:{
+            clientId:id
+        }
+    })
+}

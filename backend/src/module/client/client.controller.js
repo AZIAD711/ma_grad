@@ -1,4 +1,4 @@
-import {addClientService,getAllClientsService,getClientByIdService,updateClientService} from "./client.service.js"
+import {addClientService,getAllClientsService,getClientByIdService,updateClientService,deleteClientService} from "./client.service.js"
 // ADD NEW CLIENT 
 export const addClientController = async(request,response)=>{
     try {
@@ -54,6 +54,22 @@ export const updateClientContoller = async(request,response)=>{
         const clients = await updateClientService(clientBody,clientId)
         return response.status(200).json({
             "message":"client updated successfully",
+            "data":clients
+        })
+    } catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// DELETE CLIENT DATA 
+export const deleteClientContoller = async(request,response)=>{
+    try {
+        const clientId = request.params.id
+        const clients = await deleteClientService(clientId)
+        return response.status(200).json({
+            "message":"client deleted successfully",
             "data":clients
         })
     } catch (error) {
