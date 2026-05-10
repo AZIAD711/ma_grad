@@ -20,3 +20,11 @@ export const updateAppoinmentMediaService = async(data,id)=>{
         }
     })
 }
+// DELETE APPOINMENT MEDIA DATA 
+export const deleteAppoinmentMediaService = async(id)=>{
+    return await AppoinmentMedia.destroy({
+        where:{
+            appoinmentMediaId:id
+        }
+    })
+}
