@@ -1,4 +1,4 @@
-import {addOrderService,getAllOrdersService,getOrderByIdService,updateOrderService} from "./order.service.js"
+import {addOrderService,getAllOrdersService,getOrderByIdService,updateOrderService,deleteOrderService} from "./order.service.js"
 // ADD NEW ORDER 
 export const addOrderController = async(request,response)=>{
     try {
@@ -57,7 +57,23 @@ export const updateOrderContoller = async(request,response)=>{
             "data":orders
         })
     } catch (error) {
-                        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// DELETE ORDER DATA 
+export const deleteOrderContoller = async(request,response)=>{
+    try {
+        const orderId = request.params.id
+        const orders = await deleteOrderService(orderId)
+        return response.status(200).json({
+            "message":"order deleted successfully",
+            "data":orders
+        })
+    } catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
         return response.status(500).json({
             "errorMessage":"something went wrong"
         })

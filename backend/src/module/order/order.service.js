@@ -19,3 +19,11 @@ export const updateOrderService = async(data,id)=>{
         }
     })
 }
+// DELETE ORDER DATA 
+export const deleteOrderService = async(id)=>{
+    return await Order.destroy({
+        where:{
+            orderId:id
+        }
+    })
+}
