@@ -11,3 +11,11 @@ export const getAllWorkersService = async()=>{
 export const getWorkerByIdService = async(id)=>{
     return await Worker.findByPk(id)
 }
+// UPDATE WORKER DATA 
+export const updateWorkerService = async(data,id)=>{
+    return await Worker.update(data,{
+        where:{
+            workerId:id
+        }
+    })
+}
