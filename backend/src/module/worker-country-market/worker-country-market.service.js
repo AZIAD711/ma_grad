@@ -19,3 +19,11 @@ export const updateWorkerCountryMarketService = async(data,id)=>{
         }
     })
 }
+// DELETE WORKER COUNTRY MARKET DATA 
+export const deleteWorkerCountryMarketService = async(id)=>{
+    return await WorkerCountryMarket.destroy({
+        where:{
+            workerId:id
+        }
+    })
+}

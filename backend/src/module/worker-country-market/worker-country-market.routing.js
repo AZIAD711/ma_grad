@@ -1,4 +1,4 @@
-import {addWorkerCountryMarketController,getAllWorkerCountryMarketContoller,getWorkerCountryMarketByIdContoller,updateWorkerCountryMarketContoller} from "./worker-country-market.controller.js"
+import {addWorkerCountryMarketController,getAllWorkerCountryMarketContoller,getWorkerCountryMarketByIdContoller,updateWorkerCountryMarketContoller,deleteWorkerCountryMarketContoller} from "./worker-country-market.controller.js"
 import express from "express"
 const API = express.Router()
 API.use(express.json())
@@ -10,4 +10,6 @@ API.get("/",getAllWorkerCountryMarketContoller)
 API.get("/:id",getWorkerCountryMarketByIdContoller)
 // http://localhost:3000/worker/country/market/update/:id
 API.put("/update/:id",updateWorkerCountryMarketContoller)
+// http://localhost:3000/worker/country/market/delete/:id
+API.delete("/delete/:id",deleteWorkerCountryMarketContoller)
 export default API
