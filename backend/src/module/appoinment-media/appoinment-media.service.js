@@ -12,3 +12,11 @@ export const getAllAppoinmentMediasService = async()=>{
 export const getAppoinmentMediaByIdService = async(id)=>{
     return await AppoinmentMedia.findByPk(id)
 }
+// UPDATE APPOINMENT MEDIA  DATA 
+export const updateAppoinmentMediaService = async(data,id)=>{
+    return await AppoinmentMedia.update(data,{
+        where:{
+            appoinmentMediaId:id
+        }
+    })
+}

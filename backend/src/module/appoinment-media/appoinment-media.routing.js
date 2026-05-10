@@ -1,4 +1,4 @@
-import {addUserController,getAllAppoinmentMediaContoller,getAppoinmentMediaByIdContoller} from "./appoinment-media.controller.js"
+import {addUserController,getAllAppoinmentMediaContoller,getAppoinmentMediaByIdContoller,updateAppoinmentMediaContoller} from "./appoinment-media.controller.js"
 import express from "express"
 const API = express.Router()
 API.use(express.json())
@@ -8,4 +8,6 @@ API.post("/add",addUserController)
 API.get("/",getAllAppoinmentMediaContoller)
 // http://localhost:3000/appoinment/media/:id
 API.get("/:id",getAppoinmentMediaByIdContoller)
+// http://localhost:3000/appoinment/media/update/:id
+API.put("/update/:id",updateAppoinmentMediaContoller)
 export default API

@@ -1,4 +1,4 @@
-import {addAppoinmentMediaService,getAllAppoinmentMediasService,getAppoinmentMediaByIdService} from "./appoinment-media.service.js"
+import {addAppoinmentMediaService,getAllAppoinmentMediasService,getAppoinmentMediaByIdService,updateAppoinmentMediaService} from "./appoinment-media.service.js"
 // ADD NEW USER 
 export const addUserController = async(request,response)=>{
     try {
@@ -41,6 +41,23 @@ export const getAppoinmentMediaByIdContoller = async(request,response)=>{
         })
     } catch (error) {
                 console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// UPDATE APPONMENT MEDIA DATA 
+export const updateAppoinmentMediaContoller = async(request,response)=>{
+    try {
+        const appoinmentMediaId = request.params.id
+        const appoinmentMediaBody = request.body
+        const appoinmentMedias = await updateAppoinmentMediaService(appoinmentMediaBody,appoinmentMediaId)
+        return response.status(200).json({
+            "message":"appoinment media updated successfully",
+            "data":appoinmentMedias
+        })
+    } catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
         return response.status(500).json({
             "errorMessage":"something went wrong"
         })
