@@ -11,6 +11,7 @@ import appoinmentMediaRouting from "./src/module/appoinment-media/appoinment-med
 import clientRouting from "./src/module/client/client.routing.js"
 import workerRouting from "./src/module/worker/worker.routing.js"
 import workerCountryMarketRouting from "./src/module/worker-country-market/worker-country-market.routing.js"
+import orderRouting from "./src/module/order/order.routing.js"
  const app = express()
 app.use(express.json())
 // USER MODULE
@@ -39,4 +40,6 @@ app.use("/review",reviewRouting)
 app.use("/appoinment",appoinmentRouting)
 // APPOINMENT MEDIA  MODULE 
 app.use("/appoinment/media",appoinmentMediaRouting)
+// ORDER MODULE 
+app.use("/order",orderRouting)
 export default app
