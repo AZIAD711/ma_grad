@@ -1,4 +1,4 @@
-import {addWorkerCountryMarketService,getAllWorkerCountryMarketService} from "./worker-country-market.service.js"
+import {addWorkerCountryMarketService,getAllWorkerCountryMarketService,getWorkerCountryMarketByIdService} from "./worker-country-market.service.js"
 // ADD NEW WORKER COUNTRY MARKET 
 export const addWorkerCountryMarketController = async(request,response)=>{
     try {
@@ -25,6 +25,22 @@ export const getAllWorkerCountryMarketContoller = async(request,response)=>{
         })
     } catch (error) {
                 console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// GET WORKER COUNTRY MARKET BY ID 
+export const getWorkerCountryMarketByIdContoller = async(request,response)=>{
+    try {
+        const workerCountryMarketId = request.params.id
+        const workerCountryMarket = await getWorkerCountryMarketByIdService(workerCountryMarketId)
+        return response.status(200).json({
+            "message":"worker contry market fetched successfully",
+            "data":workerCountryMarket
+        })
+    } catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
         return response.status(500).json({
             "errorMessage":"something went wrong"
         })

@@ -7,3 +7,7 @@ export const addWorkerCountryMarketService = async(data)=>{
 export const getAllWorkerCountryMarketService = async()=>{
     return await WorkerCountryMarket.findAll()
 }
+// GET WORKER COUNTRY MARKET BY ID 
+export const getWorkerCountryMarketByIdService = async(id)=>{
+    return await WorkerCountryMarket.findByPk(id)
+}
