@@ -7,3 +7,7 @@ export const addWorkerService = async(data)=>{
 export const getAllWorkersService = async()=>{
     return await Worker.findAll()
 }
+// GET WORKER BY ID 
+export const getWorkerByIdService = async(id)=>{
+    return await Worker.findByPk(id)
+}
