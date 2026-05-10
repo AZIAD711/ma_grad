@@ -6,6 +6,7 @@ import adminRouter from './src/module/admin/admin.routing.js'
 import adminFeaturesRouting from "./src/module/admin-features/admin-features.routing.js"
 import reviewRouting from "./src/module/review/review.routing.js"
 import projectMediaRouting from "./src/module/project-media/project-media.routing.js"
+import appoinmentRouting from  "./src/module/appoinment/appoinment.routing.js"
  const app = express()
 app.use(express.json())
 // USER MODULE
@@ -22,4 +23,6 @@ app.use("/admin",adminRouter)
 app.use("/admin/feature",adminFeaturesRouting)
 // REVIEW MODULE 
 app.use("/review",reviewRouting)
+// APPOINMENT MODULE 
+app.use("/appoinment",appoinmentRouting)
 export default app
