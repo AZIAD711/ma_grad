@@ -1,4 +1,4 @@
-import {addAppoinmentService,getAllAppoinmentService,getAppoinmentByIdService,updateAppoinmentService} from "./appoinment.service.js"
+import {addAppoinmentService,getAllAppoinmentService,getAppoinmentByIdService,updateAppoinmentService,deleteAppoinmentService} from "./appoinment.service.js"
 // ADD NEW APPOINMENT 
 export const addAppoinmentController = async(request,response)=>{
     try {
@@ -54,6 +54,22 @@ export const updateAppoinmentContoller = async(request,response)=>{
         const appoinments = await updateAppoinmentService(appoinmentBody,appoinmentId)
         return response.status(200).json({
             "message":"appoinment updated successfully",
+            "data":appoinments
+        })
+    } catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// DELETE APPOINMENT DATA 
+export const deleteAppoinmentContoller = async(request,response)=>{
+    try {
+        const appoinmentId = request.params.id
+        const appoinments = await deleteAppoinmentService(appoinmentId)
+        return response.status(200).json({
+            "message":"appoinments deleted successfully",
             "data":appoinments
         })
     } catch (error) {

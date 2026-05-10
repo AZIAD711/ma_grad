@@ -20,3 +20,11 @@ export const updateAppoinmentService = async(data,id)=>{
         }
     })
 }
+// DELETE APPOINMENT DATA 
+export const deleteAppoinmentService = async(id)=>{
+    return await Appoinment.destroy({
+        where:{
+            appoinmentId:id
+        }
+    })
+}
