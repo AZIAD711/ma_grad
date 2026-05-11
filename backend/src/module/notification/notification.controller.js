@@ -1,4 +1,4 @@
-import {addNotificationService,getAllNotificationsService,getNotificationByIdService} from "./notification.service.js"
+import {addNotificationService,getAllNotificationsService,getNotificationByIdService,updateNotificationService} from "./notification.service.js"
 // ADD NEW NOTIFICATION 
 export const addOrderController = async(request,response)=>{
     try {
@@ -38,6 +38,23 @@ export const getNotificationByIdContoller = async(request,response)=>{
         return response.status(200).json({
             "message":"notification fetched successfully",
             "data":notification
+        })
+    } catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// UPDATE NOTIFICATION DATA 
+export const updateNotificationContoller = async(request,response)=>{
+    try {
+        const notificationId = request.params.id
+        const notificationBody = request.body
+        const notifcations = await updateNotificationService(notificationBody,notificationId)
+        return response.status(200).json({
+            "message":"notification updated successfully",
+            "data":notifcations
         })
     } catch (error) {
         console.log(`❌ ERROR IN CONTROLLER : ${error}`)

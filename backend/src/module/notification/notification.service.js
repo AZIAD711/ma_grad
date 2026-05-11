@@ -10,3 +10,11 @@ export const getAllNotificationsService = async()=>{
 export const getNotificationByIdService = async(id)=>{
     return await Notification.findByPk(id)
 }
+// UPDATE NOTIFICATION DATA 
+export const updateNotificationService = async(data,id)=>{
+    return await Notification.update(data,{
+        where:{
+            notificationId:id
+        }
+    })
+}
