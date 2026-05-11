@@ -1,4 +1,4 @@
-import {addNotificationService,getAllNotificationsService,getNotificationByIdService,updateNotificationService} from "./notification.service.js"
+import {addNotificationService,getAllNotificationsService,getNotificationByIdService,updateNotificationService,deleteNotificationService} from "./notification.service.js"
 // ADD NEW NOTIFICATION 
 export const addOrderController = async(request,response)=>{
     try {
@@ -54,6 +54,22 @@ export const updateNotificationContoller = async(request,response)=>{
         const notifcations = await updateNotificationService(notificationBody,notificationId)
         return response.status(200).json({
             "message":"notification updated successfully",
+            "data":notifcations
+        })
+    } catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+    }
+}
+// DELETE NOTIFICATION DATA 
+export const deleteNotificationContoller = async(request,response)=>{
+    try {
+        const notificationId = request.params.id
+        const notifcations = await deleteNotificationService(notificationId)
+        return response.status(200).json({
+            "message":"notifcation deleted successfully",
             "data":notifcations
         })
     } catch (error) {

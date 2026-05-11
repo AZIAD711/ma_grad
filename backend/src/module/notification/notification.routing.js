@@ -1,4 +1,4 @@
-import {addOrderController,getAllNotificationsContoller,getNotificationByIdContoller,updateNotificationContoller} from "./notification.controller.js"
+import {addOrderController,getAllNotificationsContoller,getNotificationByIdContoller,updateNotificationContoller,deleteNotificationContoller} from "./notification.controller.js"
 import express from "express"
 const API = express.Router()
 API.use(express.json())
@@ -10,4 +10,6 @@ API.get("/",getAllNotificationsContoller)
 API.get("/:id",getNotificationByIdContoller)
 // http://localhost:3000/notification/update/:id
 API.put("/update/:id",updateNotificationContoller)
+// http://localhost:3000/notification/delete/:id
+API.delete("/delete/:id",deleteNotificationContoller)
 export default API

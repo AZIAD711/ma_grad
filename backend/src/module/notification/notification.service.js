@@ -18,3 +18,11 @@ export const updateNotificationService = async(data,id)=>{
         }
     })
 }
+// DELETE NOTIFICATION DATA 
+export const deleteNotificationService = async(id)=>{
+    return await Notification.destroy({
+        where:{
+            notificationId:id
+        }
+    })
+}
