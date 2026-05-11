@@ -1,5 +1,5 @@
 import express from "express"
-import userRouter from "./src/module/user/user.routing.js"
+import authRouter from "./src/module/auth/auth.routing.js"
 import projectRouter from "./src/module/project/project.routing.js"
 import feedbackRouter from "./src/module/feedback/feedback.routing.js"
 import adminRouter from './src/module/admin/admin.routing.js'
@@ -16,7 +16,7 @@ import notificationRouting from "./src/module/notification/notification.routing.
  const app = express()
 app.use(express.json())
 // USER MODULE
-app.use("/user",userRouter)
+app.use("/user",authRouter)
 // CLIENT MODULE 
 app.use("/client",clientRouting)
 // WORKER MODULE 

@@ -27,3 +27,16 @@ export const deleteUserService = async(id)=>{
         }
     })
 }
+// LOGIN BY EMAIL AND PASSWORD 
+export const loginUserService= async (email,password)=>{
+    const userData = await User.findOne({
+        where:{
+            email:email,
+            password:password
+        }
+    })
+    // if(!userData){
+    //     throw new Error("Email or password is incorrect");
+    // }
+    return userData
+}

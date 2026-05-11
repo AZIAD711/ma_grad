@@ -1,4 +1,4 @@
-import {addUserService,getAllUsersService,getUserByIdService,updateUserService,deleteUserService} from "./user.service.js"
+import {addUserService,getAllUsersService,getUserByIdService,updateUserService,deleteUserService,loginUserService} from "./auth.service.js"
 // ADD NEW USER 
 export const addUserController = async(request,response)=>{
     try {
@@ -78,4 +78,25 @@ export const deleteUserContoller = async(request,response)=>{
             "errorMessage":"something went wrong"
         })
     }
+}
+// LOGIN USER BY EMAIL OR PASSWORD 
+export const loignUserController = async (request,response)=>{
+try {
+    const userBody = request.body
+    const userData = await loginUserService(userBody.email,userBody.password)
+    if(!userData){
+        return response.status(401).json({
+            "errorMessage":"Email or password is incorrect"
+        })
+    }
+    return response.status(200).json({
+        "message":"user logged in successfully",
+        "data":userData
+    })
+} catch (error) {
+        console.log(`❌ ERROR IN CONTROLLER : ${error}`)
+        return response.status(500).json({
+            "errorMessage":"something went wrong"
+        })
+}
 }

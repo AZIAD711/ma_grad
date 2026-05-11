@@ -19,7 +19,10 @@ export const User = database.define("user",{
     },
     // PASSWORD 
     password : {
-        type: DataTypes.STRING(8)
+        type: DataTypes.STRING(8),
+        get(value){
+            return "********"
+        }
     },
     // PHONE NUMBER
     phoneNumber : {
