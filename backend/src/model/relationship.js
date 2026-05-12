@@ -114,7 +114,7 @@ export const defineRelationship = () => {
         foreignKey: "clientId",
     })
     // CLIENT => ORDER 
-    Client(Order, {
+    Client.hasMany(Order, {
         foreignKey: "clientId",
         onDelete: "CASCADE",
         onUpdate: "CASCADE"
@@ -186,21 +186,21 @@ export const defineRelationship = () => {
         foreignKey: "projectId",
     })
     // GUIDLINE => GUIDLINE MEDIA
-    Guidline.hasMany(GuidlineMedia, {
+    Guideline.hasMany(GuidlineMedia, {
         foreignKey: "guidlineId",
         onDelete: "CASCADE",
         onUpdate: "CASCADE"
     })
-    GuidlineMedia.belongsTo(Guidline, {
+    GuidlineMedia.belongsTo(Guideline, {
         foreignKey: "guidlineId",
     })
     // GUIDLINE => GUIDLINE TOOLS
-    Guidline.hasOne(GuidelineTools, {
+    Guideline.hasOne(GuidelineTools, {
         foreignKey: "guidlineId",
         onDelete: "CASCADE",
         onUpdate: "CASCADE"
     })
-    GuidelineTools.belongsTo(Guidline, {
+    GuidelineTools.belongsTo(Guideline, {
         foreignKey: "guidlineId",
     })
     // SUBCRIPTION PLAN => SUBCRIPTION PLAN FEATURES

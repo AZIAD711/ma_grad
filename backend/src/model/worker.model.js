@@ -26,6 +26,7 @@ export const Worker = database.define("worker",{
       'Plumber',
       'Carpenter'
     ),
+    
         field : "job_title"
     }
 },

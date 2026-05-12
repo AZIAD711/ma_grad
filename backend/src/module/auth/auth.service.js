@@ -1,7 +1,40 @@
+import { Admin } from "../../model/admin.model.js"
+import { Client } from "../../model/client.model.js"
 import { User } from "../../model/user.model.js"
+import { Worker } from "../../model/worker.model.js"
 // ADD A NEW USER 
-export const addUserService = async(data)=>{
-    return await User.create(data)
+export const registerService = async(data)=>{
+    const userData= await User.create(data)
+    // CHECK ROLE
+    // CLIENT
+    if (data.role === "client") {
+
+        await Client.create({
+            userId: userData.userId,
+            gender: data.gender,
+            salary: data.salary,
+            incomeLevel: data.incomeLevel
+        })
+
+    }
+    // WORKER
+     else if (data.role === "worker") {
+        await Worker.create({
+            userId: userData.userId,
+            natiolityId: data.natiolityId,
+            location: data.location,
+            jobTitle: data.jobTitle
+        })
+    }
+    // ADMIN
+    else if (data.role === "admin") {
+        await Admin.create({
+            userId: userData.userId,
+            authorityLevel: data.authorityLevel
+        })
+    }
+    return userData
+    
 }
 // GET ALL USERS 
 export const getAllUsersService = async()=>{

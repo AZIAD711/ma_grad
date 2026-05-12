@@ -1,9 +1,9 @@
-import {addUserController,getAllUsersContoller,getUserByIdContoller,updateUserContoller,deleteUserContoller,loignUserController} from "./auth.controller.js"
+import {registerController,getAllUsersContoller,getUserByIdContoller,updateUserContoller,deleteUserContoller,loignUserController} from "./auth.controller.js"
 import express from "express"
 const API = express.Router()
 API.use(express.json())
-// http://localhost:3000/user/add
-API.post("/add",addUserController)
+// http://localhost:3000/user/register
+API.post("/register",registerController)
 // http://localhost:3000/user
 API.get("/",getAllUsersContoller)
 // http://localhost:3000/user/:id

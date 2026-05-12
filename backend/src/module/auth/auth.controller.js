@@ -1,9 +1,9 @@
-import {addUserService,getAllUsersService,getUserByIdService,updateUserService,deleteUserService,loginUserService} from "./auth.service.js"
+import {registerService,getAllUsersService,getUserByIdService,updateUserService,deleteUserService,loginUserService} from "./auth.service.js"
 // ADD NEW USER 
-export const addUserController = async(request,response)=>{
+export const registerController = async(request,response)=>{
     try {
         const userBody = request.body
-        const newUser = await addUserService(userBody)
+        const newUser = await registerService(userBody)
         return response.status(201).json({
             "message":"user added successfully",
             "data":newUser

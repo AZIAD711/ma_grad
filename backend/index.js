@@ -1,8 +1,10 @@
 import app from "./app.js"
 import { databaseConnection as database } from "../backend/src/database/connection.js"
+import { defineRelationship } from "../backend/src/model/relationship.js"
 
 const startServer = async () => {
     try { 
+        defineRelationship()
         await database.sync({
             // force: true
         })

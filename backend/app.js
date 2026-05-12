@@ -15,6 +15,7 @@ import orderRouting from "./src/module/order/order.routing.js"
 import notificationRouting from "./src/module/notification/notification.routing.js"
  const app = express()
 app.use(express.json())
+
 // USER MODULE
 app.use("/user",authRouter)
 // CLIENT MODULE 
