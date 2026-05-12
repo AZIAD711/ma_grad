@@ -2,6 +2,8 @@ import { Admin } from "../../model/admin.model.js"
 import { Client } from "../../model/client.model.js"
 import { User } from "../../model/user.model.js"
 import { Worker } from "../../model/worker.model.js"
+import jwt from "jsonwebtoken"
+import bcrypt from "bcrypt"
 // ADD A NEW USER 
 export const registerService = async(data)=>{
     const userData= await User.create(data)
@@ -68,8 +70,26 @@ export const loginUserService= async (email,password)=>{
             password:password
         }
     })
-    // if(!userData){
-    //     throw new Error("Email or password is incorrect");
-    // }
-    return userData
+        if (!userData) {
+        throw new Error("User not found")
+    }
+// generate token
+    const token = jwt.sign(
+        {
+            userId: userData.userId,
+            email: userData.email,
+            role: userData.role
+        },
+        process.env.JWT_SECRET,
+        {
+            expiresIn: "7d"
+        },
+        console.log("⚠️"+process.env.JWT_SECRET)
+    )
+    console.log(process.env.JWT_SECRET)
+    return {
+        "message":"Login Sccuessfully",
+        "token":token,
+        "data":userData
+    }
 }
