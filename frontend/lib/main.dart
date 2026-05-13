@@ -3,6 +3,7 @@ import 'package:frontend/client/sign-up.dart';
 import 'package:frontend/other/login.dart';
 import 'package:frontend/other/role-page.dart';
 import 'package:frontend/other/welcome-page.dart';
+import 'package:frontend/worker/profile-chat.dart';
 import 'package:frontend/worker/profile-info.dart';
 import 'package:frontend/worker/profile.dart';
 import 'package:frontend/worker/project/step-2.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       // home: LoginPage(),
-      home: WorkerProfilePageInfo(),
+      home: WorkerProfilePage(),
     );
   }
 }
