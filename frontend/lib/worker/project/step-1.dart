@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:frontend/worker/project/step-2.dart';
 
 class ProjectEditorPage1 extends StatefulWidget {
   const ProjectEditorPage1({super.key});
@@ -11,8 +15,123 @@ class ProjectEditorPage1 extends StatefulWidget {
 
 class _ProjectEditorPageState extends State<ProjectEditorPage1> {
   List<File> selectedImages = [];
+  List<int> uploadedMediaIds = [];
   final ImagePicker _picker = ImagePicker();
   bool isLoading = false;
+  bool isUploading = false;
+
+  String token = '';
+  int userId = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadToken();
+  }
+
+  Future<void> _loadToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('auth_token') ?? '';
+    userId = prefs.getInt('user_id') ?? 0;
+    print('Token loaded: ${token.isNotEmpty}');
+    print('User ID: $userId');
+  }
+
+  Future<Map<String, dynamic>> _uploadImage(File imageFile) async {
+    try {
+      List<int> imageBytes = await imageFile.readAsBytes();
+      String base64Image = base64Encode(imageBytes);
+
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:3000/project/media/add'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'type': 'image', 'url': base64Image}),
+      );
+
+      print('Upload Response Status: ${response.statusCode}');
+      print('Upload Response Body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = json.decode(response.body);
+        int mediaId = 0;
+
+        if (responseData.containsKey('data') &&
+            responseData['data'].containsKey('projectMediaId')) {
+          mediaId = responseData['data']['projectMediaId'];
+        } else if (responseData.containsKey('projectMediaId')) {
+          mediaId = responseData['projectMediaId'];
+        }
+
+        return {'success': true, 'mediaId': mediaId};
+      } else {
+        return {'success': false, 'error': 'Failed to upload image'};
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+      return {'success': false, 'error': e.toString()};
+    }
+  }
+
+  Future<void> _uploadAllImages() async {
+    if (selectedImages.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select at least one image'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      isUploading = true;
+    });
+
+    try {
+      List<int> mediaIds = [];
+      int successCount = 0;
+
+      for (var image in selectedImages) {
+        final result = await _uploadImage(image);
+        if (result['success']) {
+          successCount++;
+          if (result['mediaId'] != 0) {
+            mediaIds.add(result['mediaId']);
+          }
+          print('✅ Image uploaded, Media ID: ${result['mediaId']}');
+        }
+      }
+
+      if (successCount > 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('$successCount image(s) uploaded!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        Future.delayed(Duration(seconds: 1), () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProjectEditorPage(mediaIds: mediaIds),
+            ),
+          );
+        });
+      } else {
+        setState(() {
+          isUploading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        isUploading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +139,6 @@ class _ProjectEditorPageState extends State<ProjectEditorPage1> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // Top Bar
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             decoration: BoxDecoration(
@@ -33,64 +151,40 @@ class _ProjectEditorPageState extends State<ProjectEditorPage1> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+                  onPressed: isUploading ? null : () => Navigator.pop(context),
                   child: Text(
                     'Close',
                     style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                   ),
                 ),
                 Text(
-                  'Project Editor',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+                  'Upload Images',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    if (selectedImages.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Please select at least one image'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            '${selectedImages.length} images uploaded successfully!',
-                          ),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                    }
-                  },
+                  onPressed: isUploading ? null : _uploadAllImages,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 3, 167, 170),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
-                    'Next',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: isUploading
+                      ? SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text('Next', style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
           ),
-
-          // Content
           Expanded(
-            child: isLoading
+            child: isLoading || isUploading
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -100,11 +194,7 @@ class _ProjectEditorPageState extends State<ProjectEditorPage1> {
                         ),
                         SizedBox(height: 20),
                         Text(
-                          'Loading images...',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[600],
-                          ),
+                          isUploading ? 'Uploading images...' : 'Loading...',
                         ),
                       ],
                     ),
@@ -114,26 +204,22 @@ class _ProjectEditorPageState extends State<ProjectEditorPage1> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Title
                         Text(
-                          'Start a Project',
+                          'Upload Images',
                           style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
                           ),
                         ),
                         SizedBox(height: 10),
                         Text(
-                          'Add content to your project',
+                          'Add images to your project',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey[600],
                           ),
                         ),
                         SizedBox(height: 40),
-
-                        // Images Section
                         Container(
                           padding: EdgeInsets.all(20),
                           decoration: BoxDecoration(
@@ -154,74 +240,34 @@ class _ProjectEditorPageState extends State<ProjectEditorPage1> {
                             ),
                           ),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Upload Images ',
+                                    'Images',
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.black,
                                     ),
                                   ),
-                                  // Upload Button
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Color.fromARGB(255, 3, 167, 170),
-                                          Color.fromARGB(255, 2, 130, 133),
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(12),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Color.fromARGB(
-                                            255,
-                                            3,
-                                            167,
-                                            170,
-                                          ).withOpacity(0.3),
-                                          blurRadius: 8,
-                                          offset: Offset(0, 3),
-                                        ),
-                                      ],
-                                    ),
-                                    child: ElevatedButton.icon(
-                                      onPressed: _showImagePickerOptions,
-                                      icon: Icon(
-                                        Icons.camera_alt,
-                                        color: Colors.white,
-                                      ),
-                                      label: Text(
-                                        'Upload',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.transparent,
-                                        shadowColor: Colors.transparent,
-                                        elevation: 0,
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 20,
-                                          vertical: 12,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                        ),
+                                  ElevatedButton.icon(
+                                    onPressed: () => _showImagePickerOptions(),
+                                    icon: Icon(Icons.camera_alt),
+                                    label: Text('Add Images'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Color.fromARGB(
+                                        255,
+                                        3,
+                                        167,
+                                        170,
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
                               SizedBox(height: 20),
-
-                              // Image Grid or Empty State
                               selectedImages.isEmpty
                                   ? _buildEmptyState()
                                   : GridView.builder(
@@ -235,31 +281,9 @@ class _ProjectEditorPageState extends State<ProjectEditorPage1> {
                                             childAspectRatio: 1,
                                           ),
                                       itemCount: selectedImages.length,
-                                      itemBuilder: (context, index) {
-                                        return _buildImageCard(index);
-                                      },
+                                      itemBuilder: (context, index) =>
+                                          _buildImageCard(index),
                                     ),
-
-                              if (selectedImages.isNotEmpty)
-                                SizedBox(height: 20),
-
-                              // Add More Button
-                              if (selectedImages.isNotEmpty)
-                                Center(
-                                  child: TextButton.icon(
-                                    onPressed: _showImagePickerOptions,
-                                    icon: Icon(
-                                      Icons.add_photo_alternate,
-                                      color: Color.fromARGB(255, 3, 167, 170),
-                                    ),
-                                    label: Text(
-                                      'Add More Images',
-                                      style: TextStyle(
-                                        color: Color.fromARGB(255, 3, 167, 170),
-                                      ),
-                                    ),
-                                  ),
-                                ),
                             ],
                           ),
                         ),
@@ -279,45 +303,16 @@ class _ProjectEditorPageState extends State<ProjectEditorPage1> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 3, 167, 170).withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.photo_library,
-                size: 60,
-                color: Color.fromARGB(255, 3, 167, 170),
-              ),
-            ),
+            Icon(Icons.photo_library, size: 60, color: Colors.grey[400]),
             SizedBox(height: 20),
             Text(
               'No images selected',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 10),
             Text(
-              'Tap the Upload button to add photos',
+              'Tap the Add Images button to select photos',
               style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: _showImagePickerOptions,
-              icon: Icon(Icons.cloud_upload),
-              label: Text('Upload Now'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 3, 167, 170),
-                foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-              ),
             ),
           ],
         ),
@@ -329,84 +324,21 @@ class _ProjectEditorPageState extends State<ProjectEditorPage1> {
     return Stack(
       fit: StackFit.expand,
       children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                blurRadius: 5,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: Image.file(
-              selectedImages[index],
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color.fromARGB(255, 3, 167, 170),
-                        Color.fromARGB(255, 2, 130, 133),
-                      ],
-                    ),
-                  ),
-                  child: Icon(
-                    Icons.image,
-                    size: 50,
-                    color: Colors.white.withOpacity(0.8),
-                  ),
-                );
-              },
-            ),
-          ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: Image.file(selectedImages[index], fit: BoxFit.cover),
         ),
         Positioned(
           top: 8,
           right: 8,
           child: GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedImages.removeAt(index);
-              });
-            },
+            onTap: () => setState(() => selectedImages.removeAt(index)),
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.red,
                 shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 4,
-                  ),
-                ],
               ),
               child: Icon(Icons.close, size: 20, color: Colors.white),
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 8,
-          left: 8,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.6),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              '${index + 1}',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
             ),
           ),
         ),
@@ -420,72 +352,64 @@ class _ProjectEditorPageState extends State<ProjectEditorPage1> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 50,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(10),
+      builder: (context) => Container(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 50,
+              height: 5,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Select Images',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildPickerOption(Icons.camera_alt, 'Camera', Colors.blue, () {
+                  Navigator.pop(context);
+                  _takePhoto();
+                }),
+                _buildPickerOption(
+                  Icons.photo_library,
+                  'Gallery',
+                  Colors.green,
+                  () {
+                    Navigator.pop(context);
+                    _pickFromGallery();
+                  },
                 ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Upload Images',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildPickerOption(
-                    icon: Icons.camera_alt,
-                    label: 'Camera',
-                    color: Colors.blue,
-                    onTap: () {
-                      Navigator.pop(context);
-                      _takePhoto();
-                    },
-                  ),
-                  _buildPickerOption(
-                    icon: Icons.photo_library,
-                    label: 'Gallery',
-                    color: Colors.green,
-                    onTap: () {
-                      Navigator.pop(context);
-                      _pickFromGallery();
-                    },
-                  ),
-                  _buildPickerOption(
-                    icon: Icons.collections,
-                    label: 'Multiple',
-                    color: Colors.orange,
-                    onTap: () {
-                      Navigator.pop(context);
-                      _pickMultipleImages();
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-            ],
-          ),
-        );
-      },
+                _buildPickerOption(
+                  Icons.collections,
+                  'Multiple',
+                  Colors.orange,
+                  () {
+                    Navigator.pop(context);
+                    _pickMultipleImages();
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _buildPickerOption({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
+  Widget _buildPickerOption(
+    IconData icon,
+    String label,
+    Color color,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -499,128 +423,31 @@ class _ProjectEditorPageState extends State<ProjectEditorPage1> {
             child: Icon(icon, size: 30, color: color),
           ),
           SizedBox(height: 8),
-          Text(
-            label,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
+          Text(label),
         ],
       ),
     );
   }
 
-  // Take photo with camera
   Future<void> _takePhoto() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      final XFile? photo = await _picker.pickImage(
-        source: ImageSource.camera,
-        imageQuality: 80,
-      );
-
-      if (photo != null) {
-        setState(() {
-          selectedImages.add(File(photo.path));
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Photo captured successfully!'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 1),
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error taking photo: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    final photo = await _picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 80,
+    );
+    if (photo != null) setState(() => selectedImages.add(File(photo.path)));
   }
 
-  // Pick single image from gallery
   Future<void> _pickFromGallery() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      final XFile? image = await _picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 80,
-      );
-
-      if (image != null) {
-        setState(() {
-          selectedImages.add(File(image.path));
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Image selected successfully!'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 1),
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error selecting image: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    final image = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 80,
+    );
+    if (image != null) setState(() => selectedImages.add(File(image.path)));
   }
 
-  // Pick multiple images from gallery
   Future<void> _pickMultipleImages() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      final List<XFile> images = await _picker.pickMultiImage(imageQuality: 80);
-
-      if (images.isNotEmpty) {
-        setState(() {
-          for (var image in images) {
-            selectedImages.add(File(image.path));
-          }
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${images.length} images selected successfully!'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 1),
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error selecting images: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    final images = await _picker.pickMultiImage(imageQuality: 80);
+    if (images.isNotEmpty)
+      setState(() => selectedImages.addAll(images.map((e) => File(e.path))));
   }
 }

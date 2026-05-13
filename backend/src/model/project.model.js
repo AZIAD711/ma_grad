@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize"
 import {databaseConnection as database} from "../database/connection.js"
+import { User } from "./user.model.js"
 export const Project = database.define("project",{
     // PROJECT ID 
     projectId : {

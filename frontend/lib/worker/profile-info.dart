@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/other/login.dart';
+import 'package:frontend/worker/profile-chat.dart';
 import 'package:frontend/worker/profile.dart';
 
 class WorkerProfilePageInfo extends StatefulWidget {
@@ -114,7 +115,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePageInfo> {
         } else if (title == 'Chat') {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
+            MaterialPageRoute(builder: (context) => WorkerProfilePageChat()),
           );
         } else {
           setState(() {
