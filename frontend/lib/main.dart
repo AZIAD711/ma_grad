@@ -4,6 +4,7 @@ import 'package:frontend/other/login.dart';
 import 'package:frontend/other/role-page.dart';
 import 'package:frontend/other/welcome-page.dart';
 import 'package:frontend/worker/profile.dart';
+import 'package:frontend/worker/project/step-2.dart';
 import 'package:frontend/worker/signUp.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       // home: LoginPage(),
-      home: WorkerProfilePage(),
+      home: ProjectEditorPage(),
     );
   }
 }
