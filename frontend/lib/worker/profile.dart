@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/other/role-page.dart';
+import 'package:frontend/worker/project/step-1.dart';
 
 class WorkerProfilePage extends StatelessWidget {
   const WorkerProfilePage({super.key});
@@ -87,7 +88,7 @@ class WorkerProfilePage extends StatelessWidget {
           // Navigate to your existing class/page
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => RolePage()),
+            MaterialPageRoute(builder: (context) => ProjectEditorPage1()),
           );
         },
         backgroundColor: Color.fromARGB(255, 3, 167, 170),
