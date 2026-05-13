@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/other/login.dart';
+import 'package:frontend/other/role-page.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -47,7 +49,7 @@ class WelcomePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const SignUpPage(),
+                          builder: (context) => const RolePage(),
                         ),
                       );
                     },
@@ -118,25 +120,6 @@ class SignUpPage extends StatelessWidget {
       ),
       body: const Center(
         child: Text('Sign Up Page', style: TextStyle(fontSize: 24)),
-      ),
-    );
-  }
-}
-
-// Example LoginPage - Replace with your existing LoginPage class
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-        backgroundColor: const Color(0xFF667eea),
-        foregroundColor: Colors.white,
-      ),
-      body: const Center(
-        child: Text('Login Page', style: TextStyle(fontSize: 24)),
       ),
     );
   }
