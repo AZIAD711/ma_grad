@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/client/profile-page.dart';
+import 'package:frontend/client/services-catloge-page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ClientHomePage extends StatefulWidget {
@@ -57,7 +58,7 @@ class _ClientHomePageState extends State<ClientHomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ClientServicesPage(),
+                  builder: (context) => const ServiceCataloguePage(),
                 ),
               );
             } else if (index == 2) {
