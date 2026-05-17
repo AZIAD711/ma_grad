@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend/client/home-page.dart';
 import 'package:frontend/other/role-page.dart';
-import 'package:frontend/worker/profile.dart';
+import 'package:frontend/worker/profile.dart' hide WorkerProfilePage;
 // import 'package:frontend/client/home-page.dart'; // Import your client home page
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -172,12 +173,12 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const RolePage(), // Your client home page
+              builder: (context) => const HomePage(), // Your client home page
             ),
           );
         } else if (userRole != null && userRole.toLowerCase() == 'worker') {
           // Worker role - Navigate to Worker Profile Page
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const WorkerProfilePage()),
           );
