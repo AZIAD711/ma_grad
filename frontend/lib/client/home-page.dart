@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/client/profile-page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ClientHomePage extends StatefulWidget {
@@ -45,9 +46,37 @@ class _ClientHomePageState extends State<ClientHomePage> {
         child: BottomNavigationBar(
           currentIndex: _selectedIndex,
           onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
+            // Navigate based on index
+            if (index == 0) {
+              // Home - Stay on current page or navigate to Home
+              setState(() {
+                _selectedIndex = index;
+              });
+            } else if (index == 1) {
+              // Services Page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ClientServicesPage(),
+                ),
+              );
+            } else if (index == 2) {
+              // Bookings Page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ClientBookingsPage(),
+                ),
+              );
+            } else if (index == 3) {
+              // Profile Page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ClientProfilePage(),
+                ),
+              );
+            }
           },
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.transparent,
@@ -788,42 +817,6 @@ class ClientBookingsPage extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text('View all your service bookings'),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// Client Profile Page
-class ClientProfilePage extends StatelessWidget {
-  const ClientProfilePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade50,
-      appBar: AppBar(
-        title: const Text('Profile'),
-        backgroundColor: const Color.fromARGB(255, 46, 46, 45),
-        foregroundColor: Colors.white,
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.person,
-              size: 80,
-              color: Color.fromARGB(255, 3, 167, 170),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Profile Page',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text('Manage your profile settings'),
           ],
         ),
       ),
