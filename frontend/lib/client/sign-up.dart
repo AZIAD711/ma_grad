@@ -438,7 +438,12 @@ class _SignUpPageState extends State<ClientSignUpPage> {
                       onPressed: _isLoading
                           ? null
                           : () {
-                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginPage(),
+                                ),
+                              );
                             },
                       child: const Text(
                         "Login",

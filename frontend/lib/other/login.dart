@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend/other/role-page.dart';
 import 'package:frontend/worker/profile.dart';
+// import 'package:frontend/client/home-page.dart'; // Import your client home page
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,11 +46,11 @@ class _LoginPageState extends State<LoginPage> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
 
-        // Extract token from your specific response structure
-        // Your response: { "message": "...", "data": { "message": "...", "token": "...", "data": {...} } }
+        // Extract token, user data, and role from your specific response structure
         String? token;
         int? userId;
         String? userName;
+        String? userRole;
 
         // Navigate through the nested structure
         if (responseData.containsKey('data')) {
@@ -62,24 +64,32 @@ class _LoginPageState extends State<LoginPage> {
             final userData = firstData['data'];
             userId = userData['userId'];
             userName = userData['name'];
+            userRole = userData['role']; // Extract role from API response
           }
         }
 
         print('Extracted Token: $token');
         print('Extracted User ID: $userId');
         print('User Name: $userName');
+        print('User Role: $userRole');
 
         if (token != null && token.isNotEmpty) {
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString('auth_token', token);
           await prefs.setInt('user_id', userId ?? 0);
           await prefs.setString('user_name', userName ?? '');
+          await prefs.setString('user_role', userRole ?? ''); // Save role
 
           // Verify save was successful
           final verifyToken = await prefs.getString('auth_token');
           print('Verification - Token saved: ${verifyToken != null}');
 
-          return {'success': true};
+          return {
+            'success': true,
+            'role': userRole,
+            'userId': userId,
+            'userName': userName,
+          };
         } else {
           print('ERROR: Token extraction failed');
           return {'success': false, 'error': 'No token received from server'};
@@ -102,6 +112,21 @@ class _LoginPageState extends State<LoginPage> {
     for (var value in map.values) {
       if (value is Map<String, dynamic>) {
         final found = _findTokenInMap(value);
+        if (found != null) return found;
+      }
+    }
+    return null;
+  }
+
+  // Helper function to find role in nested maps
+  String? _findRoleInMap(Map<String, dynamic> map) {
+    if (map.containsKey('role') && map['role'] is String) {
+      return map['role'];
+    }
+
+    for (var value in map.values) {
+      if (value is Map<String, dynamic>) {
+        final found = _findRoleInMap(value);
         if (found != null) return found;
       }
     }
@@ -136,11 +161,36 @@ class _LoginPageState extends State<LoginPage> {
           ),
         );
 
-        // Navigate to profile page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const WorkerProfilePage()),
-        );
+        // Get the user role from the result
+        String? userRole = result['role'];
+
+        print('Navigating based on role: $userRole');
+
+        // Navigate based on role
+        if (userRole != null && userRole.toLowerCase() == 'client') {
+          // Client role - Navigate to Client Home Page
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const RolePage(), // Your client home page
+            ),
+          );
+        } else if (userRole != null && userRole.toLowerCase() == 'worker') {
+          // Worker role - Navigate to Worker Profile Page
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const WorkerProfilePage()),
+          );
+        } else {
+          // Default or unknown role - Show error
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Unknown role: $userRole'),
+              backgroundColor: Colors.orange,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -347,12 +397,10 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: _isLoading
                           ? null
                           : () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Registration feature coming soon!',
-                                  ),
-                                  duration: Duration(seconds: 2),
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const RolePage(),
                                 ),
                               );
                             },
