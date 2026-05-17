@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class ClientHomePage extends StatefulWidget {
+  const ClientHomePage({super.key});
 
   @override
-  State<HomePage> createState() => _WorkerHomePageState();
+  State<ClientHomePage> createState() => _ClientHomePageState();
 }
 
-class _WorkerHomePageState extends State<HomePage> {
+class _ClientHomePageState extends State<ClientHomePage> {
   int _selectedIndex = 0;
 
   // List of pages for bottom navigation
   final List<Widget> _pages = [
-    const WorkerHomeContent(),
-    const WorkerJobsPage(),
-    const WorkerEarningsPage(),
-    const WorkerProfilePage(),
+    const ClientHomeContent(),
+    const ClientServicesPage(),
+    const ClientBookingsPage(),
+    const ClientProfilePage(),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,10 +56,13 @@ class _WorkerHomePageState extends State<HomePage> {
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.work), label: 'Jobs'),
             BottomNavigationBarItem(
-              icon: Icon(Icons.attach_money),
-              label: 'Earnings',
+              icon: Icon(Icons.miscellaneous_services),
+              label: 'Services',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Bookings',
             ),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           ],
@@ -68,9 +72,9 @@ class _WorkerHomePageState extends State<HomePage> {
   }
 }
 
-// Worker Home Content
-class WorkerHomeContent extends StatelessWidget {
-  const WorkerHomeContent({super.key});
+// Client Home Content
+class ClientHomeContent extends StatelessWidget {
+  const ClientHomeContent({super.key});
 
   void _showMessage(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -78,14 +82,9 @@ class WorkerHomeContent extends StatelessWidget {
     );
   }
 
-  Future<String?> _getWorkerName() async {
+  Future<String?> _getUserName() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('user_name');
-  }
-
-  Future<String?> _getWorkerRole() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('user_role');
   }
 
   @override
@@ -135,10 +134,10 @@ class WorkerHomeContent extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               FutureBuilder<String?>(
-                                future: _getWorkerName(),
+                                future: _getUserName(),
                                 builder: (context, snapshot) {
                                   return Text(
-                                    snapshot.data ?? 'Worker',
+                                    snapshot.data ?? 'Client',
                                     style: const TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
@@ -148,46 +147,12 @@ class WorkerHomeContent extends StatelessWidget {
                                 },
                               ),
                               const SizedBox(height: 4),
-                              FutureBuilder<String?>(
-                                future: _getWorkerRole(),
-                                builder: (context, snapshot) {
-                                  String role =
-                                      snapshot.data ?? 'Service Provider';
-                                  IconData roleIcon;
-                                  switch (role.toLowerCase()) {
-                                    case 'painter':
-                                      roleIcon = Icons.brush;
-                                      break;
-                                    case 'electrician':
-                                      roleIcon = Icons.electrical_services;
-                                      break;
-                                    case 'plumber':
-                                      roleIcon = Icons.plumbing;
-                                      break;
-                                    case 'ac technician':
-                                      roleIcon = Icons.ac_unit;
-                                      break;
-                                    default:
-                                      roleIcon = Icons.build;
-                                  }
-                                  return Row(
-                                    children: [
-                                      Icon(
-                                        roleIcon,
-                                        color: Colors.white70,
-                                        size: 16,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        role,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white70,
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
+                              const Text(
+                                'Find trusted professionals near you',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white70,
+                                ),
                               ),
                             ],
                           ),
@@ -224,7 +189,7 @@ class WorkerHomeContent extends StatelessWidget {
                                       minHeight: 18,
                                     ),
                                     child: Text(
-                                      '5',
+                                      '3',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 10,
@@ -239,30 +204,36 @@ class WorkerHomeContent extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 24),
-                      // Stats Row
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildStatCard(
-                            title: 'Total Jobs',
-                            value: '24',
-                            icon: Icons.work,
-                            color: Colors.white,
+                      const SizedBox(height: 20),
+                      // Search Bar
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const TextField(
+                          decoration: InputDecoration(
+                            hintText:
+                                'Search for AC repair, painting, plumbing...',
+                            prefixIcon: Icon(Icons.search),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: EdgeInsets.symmetric(vertical: 15),
                           ),
-                          _buildStatCard(
-                            title: 'Completed',
-                            value: '18',
-                            icon: Icons.check_circle,
-                            color: Colors.green,
-                          ),
-                          _buildStatCard(
-                            title: 'Rating',
-                            value: '4.9',
-                            icon: Icons.star,
-                            color: Colors.amber,
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
@@ -270,14 +241,14 @@ class WorkerHomeContent extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // Quick Actions Section
+              // Categories Section
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Quick Actions',
+                      'Browse Services',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -285,42 +256,61 @@ class WorkerHomeContent extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildQuickAction(
-                          icon: Icons.toggle_on,
-                          label: 'Available',
-                          color: Colors.green,
-                          onTap: () {
-                            _showMessage(context, 'Set Available');
-                          },
-                        ),
-                        _buildQuickAction(
-                          icon: Icons.history,
-                          label: 'History',
-                          color: Colors.blue,
-                          onTap: () {
-                            _showMessage(context, 'Job History');
-                          },
-                        ),
-                        _buildQuickAction(
-                          icon: Icons.calendar_today,
-                          label: 'Schedule',
-                          color: Colors.orange,
-                          onTap: () {
-                            _showMessage(context, 'Schedule');
-                          },
-                        ),
-                        _buildQuickAction(
-                          icon: Icons.support_agent,
-                          label: 'Support',
-                          color: Colors.purple,
-                          onTap: () {
-                            _showMessage(context, 'Support');
-                          },
-                        ),
-                      ],
+                    SizedBox(
+                      height: 100,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          _buildCategoryCard(
+                            icon: Icons.ac_unit,
+                            label: 'AC Repair',
+                            color: Colors.blue,
+                            onTap: () {
+                              _showMessage(context, 'AC Repair');
+                            },
+                          ),
+                          _buildCategoryCard(
+                            icon: Icons.brush,
+                            label: 'Painting',
+                            color: Colors.green,
+                            onTap: () {
+                              _showMessage(context, 'Painting');
+                            },
+                          ),
+                          _buildCategoryCard(
+                            icon: Icons.plumbing,
+                            label: 'Plumbing',
+                            color: Colors.orange,
+                            onTap: () {
+                              _showMessage(context, 'Plumbing');
+                            },
+                          ),
+                          _buildCategoryCard(
+                            icon: Icons.electrical_services,
+                            label: 'Electrician',
+                            color: Colors.purple,
+                            onTap: () {
+                              _showMessage(context, 'Electrician');
+                            },
+                          ),
+                          _buildCategoryCard(
+                            icon: Icons.handyman,
+                            label: 'Carpentry',
+                            color: Colors.brown,
+                            onTap: () {
+                              _showMessage(context, 'Carpentry');
+                            },
+                          ),
+                          _buildCategoryCard(
+                            icon: Icons.cleaning_services,
+                            label: 'Cleaning',
+                            color: Colors.teal,
+                            onTap: () {
+                              _showMessage(context, 'Cleaning');
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -328,7 +318,7 @@ class WorkerHomeContent extends StatelessWidget {
 
               const SizedBox(height: 32),
 
-              // New Job Requests Section
+              // Featured Professionals Section
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -338,7 +328,7 @@ class WorkerHomeContent extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'New Job Requests',
+                          'Featured Professionals',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -347,7 +337,7 @@ class WorkerHomeContent extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            _showMessage(context, 'View All Requests');
+                            _showMessage(context, 'View All Professionals');
                           },
                           child: Text(
                             'View All',
@@ -360,28 +350,45 @@ class WorkerHomeContent extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    _buildJobRequestCard(
-                      customerName: 'John Doe',
-                      serviceType: 'AC Repair',
-                      location: 'Downtown',
-                      price: '\$120',
-                      time: '2 hours ago',
-                    ),
-                    const SizedBox(height: 12),
-                    _buildJobRequestCard(
-                      customerName: 'Jane Smith',
-                      serviceType: 'Painting',
-                      location: 'Uptown',
-                      price: '\$250',
-                      time: '3 hours ago',
-                    ),
-                    const SizedBox(height: 12),
-                    _buildJobRequestCard(
-                      customerName: 'Mike Johnson',
-                      serviceType: 'Plumbing',
-                      location: 'Westside',
-                      price: '\$180',
-                      time: '5 hours ago',
+                    SizedBox(
+                      height: 230,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          _buildProfessionalCard(
+                            name: 'Mike Johnson',
+                            service: 'AC Technician',
+                            rating: 4.9,
+                            jobs: '156 jobs',
+                            price: '\$50/hr',
+                            image: Icons.person,
+                          ),
+                          _buildProfessionalCard(
+                            name: 'Sarah Wilson',
+                            service: 'Painter',
+                            rating: 4.8,
+                            jobs: '98 jobs',
+                            price: '\$45/hr',
+                            image: Icons.person,
+                          ),
+                          _buildProfessionalCard(
+                            name: 'David Brown',
+                            service: 'Plumber',
+                            rating: 4.9,
+                            jobs: '203 jobs',
+                            price: '\$55/hr',
+                            image: Icons.person,
+                          ),
+                          _buildProfessionalCard(
+                            name: 'John Davis',
+                            service: 'Electrician',
+                            rating: 4.7,
+                            jobs: '134 jobs',
+                            price: '\$60/hr',
+                            image: Icons.person,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -389,14 +396,14 @@ class WorkerHomeContent extends StatelessWidget {
 
               const SizedBox(height: 32),
 
-              // Today's Schedule Section
+              // Ongoing Bookings Section
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Today's Schedule",
+                      'Ongoing Bookings',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -404,25 +411,28 @@ class WorkerHomeContent extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    _buildScheduleCard(
-                      time: '10:00 AM',
-                      customer: 'Robert Brown',
-                      service: 'AC Installation',
-                      address: '123 Main St',
+                    _buildBookingCard(
+                      service: 'AC Repair',
+                      professional: 'Mike Johnson',
+                      date: 'Today, 2:00 PM',
+                      status: 'In Progress',
+                      statusColor: Colors.orange,
                     ),
                     const SizedBox(height: 12),
-                    _buildScheduleCard(
-                      time: '2:00 PM',
-                      customer: 'Sarah Wilson',
-                      service: 'Electrical Repair',
-                      address: '456 Oak Ave',
+                    _buildBookingCard(
+                      service: 'Painting',
+                      professional: 'Sarah Wilson',
+                      date: 'Tomorrow, 10:00 AM',
+                      status: 'Confirmed',
+                      statusColor: Colors.green,
                     ),
                     const SizedBox(height: 12),
-                    _buildScheduleCard(
-                      time: '4:30 PM',
-                      customer: 'David Lee',
-                      service: 'Wall Painting',
-                      address: '789 Pine Rd',
+                    _buildBookingCard(
+                      service: 'Plumbing',
+                      professional: 'David Brown',
+                      date: 'Dec 20, 2024',
+                      status: 'Pending',
+                      statusColor: Colors.blue,
                     ),
                   ],
                 ),
@@ -436,43 +446,7 @@ class WorkerHomeContent extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard({
-    required String title,
-    required String value,
-    required IconData icon,
-    required Color color,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 11,
-              color: Colors.white.withOpacity(0.8),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuickAction({
+  Widget _buildCategoryCard({
     required IconData icon,
     required String label,
     required Color color,
@@ -480,30 +454,173 @@ class WorkerHomeContent extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: onTap,
+      child: Container(
+        width: 80,
+        margin: const EdgeInsets.only(right: 16),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [color.withOpacity(0.8), color],
+                ),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: color.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Icon(icon, color: Colors.white, size: 30),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                color: Colors.grey.shade700,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfessionalCard({
+    required String name,
+    required String service,
+    required double rating,
+    required String jobs,
+    required String price,
+    required IconData image,
+  }) {
+    return Container(
+      width: 200,
+      margin: const EdgeInsets.only(right: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            height: 100,
+            width: double.infinity,
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [color.withOpacity(0.8), color]),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: color.withOpacity(0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
+              gradient: const LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 46, 46, 45),
+                  Color.fromARGB(255, 3, 167, 170),
+                ],
+              ),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(15),
+                topRight: Radius.circular(15),
+              ),
+            ),
+            child: Center(
+              child: Icon(
+                image,
+                size: 50,
+                color: Colors.white.withOpacity(0.9),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  service,
+                  style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(Icons.star, size: 12, color: Colors.amber),
+                    const SizedBox(width: 2),
+                    Text(
+                      rating.toString(),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    const Icon(Icons.work, size: 10, color: Colors.grey),
+                    const SizedBox(width: 2),
+                    Text(
+                      jobs,
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      price,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green.shade700,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(
+                          255,
+                          3,
+                          167,
+                          170,
+                        ).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Text(
+                        'Book',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 3, 167, 170),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
-            ),
-            child: Icon(icon, color: Colors.white, size: 28),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey.shade700,
-              fontWeight: FontWeight.w500,
             ),
           ),
         ],
@@ -511,12 +628,12 @@ class WorkerHomeContent extends StatelessWidget {
     );
   }
 
-  Widget _buildJobRequestCard({
-    required String customerName,
-    required String serviceType,
-    required String location,
-    required String price,
-    required String time,
+  Widget _buildBookingCard({
+    required String service,
+    required String professional,
+    required String date,
+    required String status,
+    required Color statusColor,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -544,79 +661,38 @@ class WorkerHomeContent extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.person, color: Colors.white, size: 24),
+            child: const Icon(Icons.build, color: Colors.white, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      customerName,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(
-                          255,
-                          3,
-                          167,
-                          170,
-                        ).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        serviceType,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: const Color.fromARGB(255, 3, 167, 170),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
+                Text(
+                  service,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
+                Text(
+                  professional,
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                ),
+                const SizedBox(height: 2),
                 Row(
                   children: [
                     Icon(
-                      Icons.location_on,
-                      size: 12,
+                      Icons.calendar_today,
+                      size: 10,
                       color: Colors.grey.shade500,
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      location,
+                      date,
                       style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.access_time,
-                      size: 12,
-                      color: Colors.grey.shade500,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      time,
-                      style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 10,
                         color: Colors.grey.shade500,
                       ),
                     ),
@@ -625,190 +701,38 @@ class WorkerHomeContent extends StatelessWidget {
               ],
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                price,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  _buildActionButton('Accept', Colors.green),
-                  const SizedBox(width: 8),
-                  _buildActionButton('Decline', Colors.red),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionButton(String text, Color color) {
-    return GestureDetector(
-      onTap: () {
-        // Handle accept/decline
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildScheduleCard({
-    required String time,
-    required String customer,
-    required String service,
-    required String address,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
           Container(
-            width: 50,
-            height: 50,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [
-                  Color.fromARGB(255, 46, 46, 45),
-                  Color.fromARGB(255, 3, 167, 170),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(12),
+              color: statusColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: statusColor.withOpacity(0.3)),
             ),
-            child: Center(
-              child: Text(
-                time.replaceAll(' AM', '').replaceAll(' PM', ''),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
+            child: Text(
+              status,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: statusColor,
               ),
             ),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  customer,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  service,
-                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                ),
-                const SizedBox(height: 2),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.location_on,
-                      size: 10,
-                      color: Colors.grey.shade500,
-                    ),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        address,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey.shade500,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Icon(Icons.chevron_right, color: Colors.grey.shade400),
         ],
       ),
     );
   }
 }
 
-// Worker Jobs Page
-class WorkerJobsPage extends StatelessWidget {
-  const WorkerJobsPage({super.key});
+// Services Page
+class ClientServicesPage extends StatelessWidget {
+  const ClientServicesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        title: const Text('My Jobs'),
-        backgroundColor: const Color.fromARGB(255, 46, 46, 45),
-        foregroundColor: Colors.white,
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.work, size: 80, color: Color.fromARGB(255, 3, 167, 170)),
-            SizedBox(height: 16),
-            Text(
-              'Jobs Page',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text('View all your assigned jobs here'),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// Worker Earnings Page
-class WorkerEarningsPage extends StatelessWidget {
-  const WorkerEarningsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade50,
-      appBar: AppBar(
-        title: const Text('Earnings'),
+        title: const Text('All Services'),
         backgroundColor: const Color.fromARGB(255, 46, 46, 45),
         foregroundColor: Colors.white,
       ),
@@ -817,17 +741,17 @@ class WorkerEarningsPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.attach_money,
+              Icons.miscellaneous_services,
               size: 80,
               color: Color.fromARGB(255, 3, 167, 170),
             ),
             SizedBox(height: 16),
             Text(
-              'Earnings Page',
+              'All Services',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
-            Text('Track your earnings and payments'),
+            Text('Browse all available services'),
           ],
         ),
       ),
@@ -835,9 +759,45 @@ class WorkerEarningsPage extends StatelessWidget {
   }
 }
 
-// Worker Profile Page
-class WorkerProfilePage extends StatelessWidget {
-  const WorkerProfilePage({super.key});
+// Bookings Page
+class ClientBookingsPage extends StatelessWidget {
+  const ClientBookingsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      appBar: AppBar(
+        title: const Text('My Bookings'),
+        backgroundColor: const Color.fromARGB(255, 46, 46, 45),
+        foregroundColor: Colors.white,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.calendar_today,
+              size: 80,
+              color: Color.fromARGB(255, 3, 167, 170),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'My Bookings',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text('View all your service bookings'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Client Profile Page
+class ClientProfilePage extends StatelessWidget {
+  const ClientProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {

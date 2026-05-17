@@ -378,7 +378,7 @@ class WorkerHomeContent extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     _buildJobRequestCard(
-                      customerName: 'Mike Johnson',
+                      customerName: 'Mike',
                       serviceType: 'Plumbing',
                       location: 'Westside',
                       price: '\$180',
